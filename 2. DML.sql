@@ -25,6 +25,7 @@ select * from author where id in (1,3,5);
 select id from author where name='홍길동';
 select * from post where id in(2,3);
 select * from post where author_id in(select id from author where name='홍길동'); --서브 쿼리
+-- 뒤에 조건절의 select문 안에는 pk 된 컬럼을 입력**
 
 -- 중복제거 조회 : distinct
 select name from author;
@@ -42,7 +43,7 @@ select * from author order by name desc, email asc;
 -- 가장 최근에 가입한 회원 1명만 조회(순차적으로 id가 입력되었다고 가정했을시)
 select * from author order by id desc limit 1;
 
--- 별칭(alias)를 이용한 select
+-- 별칭(alias)를 이용한 select (테이블 컬럼 모두 alias 지정 가능)
 select name as '이름' , email as '이메일' from author;
 select a.name, a.email from author as a;    -- 여기서 as 는 생략가능 / 여러개 테이블을 엮어서 사용시
 select a.name, a.email from author a;

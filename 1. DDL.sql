@@ -1,6 +1,11 @@
 -- mariabd 서버에 터미널창에서 접속(db gui 툴로 접속시에는 커넥션 객체 생성하여 연결)
 mariabd -u root -p -- 엔터 후 비밀번호 별도 입력
 
+-- DDL -> CREATE , ALTER , DROP
+컬럼명 컬럼 타입 제약 조건
+create table author(id int primary key, name varchar(255) not null, email varchar(255) not null, ..., foreign key(author_id) references author(id) )
+-- DML -> INSERT , UPDATE , DELETE , SELECT
+
 -- 스키마(database) 생성
 create database board;  
 -- 스키마 삭제
@@ -13,7 +18,7 @@ show databases;
 use 스키마명;   -- 스키마 = database
 
 -- 문자인코딩 세팅 조회 (암기할건아님)
-show variables like 'character_set_server'  
+show variables like 'character_set_server' ; 
 
 -- 문자인코딩 변경
 alter database board default character set = utf8mb4;
@@ -42,7 +47,7 @@ create table posts (id int , title varchar(255), contents varchar(255), author_i
 -- 테이블 제약조건 조회 (constraint) (pk,fk 조회됨/describe에서는 조회안됨)
 select * from information_schema.key_column_usage where table_name="posts";
 
--- 테이블 index 조회 (빈번하게 조회될만한 목록(중요한데이터대상) ex) PK,fk )
+-- 테이블 index 조회 (빈번하게 조회될만한 목록(중요한데이터대상) ex) PK,fk,unique )
 show index from posts;  
 
 -- alter : 테이블의 구조를 변경
@@ -61,7 +66,7 @@ alter table post change column contents content varchar(255); --타입 필수로
 
 -- 테이블 컬럼의 타입과 제약조건 변경
 alter table post modify column content varchar(3000);
-alter table author modify column email varchar(255) not null unique; --타입은 변경을 안해도 필수로 입력 
+alter table author modify column email varchar(255) not null unique; --*타입,제약조건*은 변경을 안해도 필수로 입력 
 
 -- 실습1. author테이블에 address컬럼을 추가 (varchar255). name은 not null로 변경.
 alter table author add column address varchar(255);
