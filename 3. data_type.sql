@@ -52,7 +52,7 @@ insert into author(id, name, email) values(13, 'dffd', 'dfddfj@naver.com');
 alter table author add colume birthday date;
 alter table post add column created_time datetime;
 insert into post(id, title, contents, author_id, created_time) values(4, 'hello4','he dkdifjkalks', 1, '2019-01-10 14:03:20');
--- datetime과 dafault 현재시간 입력은 많이 사용되는 패턴 (current_timestamp() : 현재시간 입력함수)
+-- datetime과 default 현재시간 입력은 많이 사용되는 패턴 (current_timestamp() : 현재시간 입력함수)
 alter table post modify column created_time datetime default current_timestamp();
 insert into post(id, title, contents, author_id) values(5, 'hello4','he dkdifjkalks', 1);
 
@@ -80,7 +80,7 @@ select cast(20251121 as date);  -- 2025-11-21
 -- 문자 -> 날짜
 select cast('20251121' as date);  -- 2025-11-21
 
--- 날짜타입변환 - date_format(T, m, d, H, i, s)
+-- 날짜타입변환 - date_format(Y, m, d, H, i, s) / 날짜 -> 문자
 select created_time from post;
 select date_format(created_time, '%Y-%m-%d') from post;
 select date_format(created_time, '%H-%i-%s') from post;
