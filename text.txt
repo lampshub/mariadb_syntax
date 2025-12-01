@@ -1,1 +1,61 @@
-ddkfifkf
+11/27 목요일
+
+정규화 > 실습(요구사항, 설계, 구축) ->
+
+**주말에 -> 테이블의 개수 10개 이내로 혼자 bd구축해보기 **
+
+
+역정규화 : 쪼개진 두 테이블을 다시 합치는것
+
+반정규화 : count값을 추가로 두는것(author에 count 컬럼 추가(이미a_p_l에 있음))
+
+**실습
+1. 엑셀 더미데이터(쓰레기데이터) 넣어서 캡쳐본 제출
+2. erd 설계 -> 캡쳐 제출
+3. erd 기반의 DB구축 및 테스트데이터 삽입 (스키마부터 만들어서 ~~)
+    1. 회원가입 
+    insert...
+    2. 상품등록
+    insert...
+    3. 주문하기
+    insert : 주문넣기
+    update : 재고 감소
+    4. 상품정보조회
+    select
+    5. 주문정보조회 (상품명도 같이 조회)
+
+
+--
+create table user(id bigint not null auto_increment primary key, name varchar(255) not null, role enum('seller','customer'));
+select * from user;
+create table order_list(id bigint not null auto_increment primary key, user_id bigint , ordered_time datetime, foreign key(user_id) references user(id) on update cascade on delete set null);
+select * from order_list;
+create table products(id bigint not null auto_increment primary key, name varchar(255) , price int not null, seller_id bigint , foreign key(seller_id) references user(id) on update cascade on delete set null);
+select * from products;
+create table order_details(id bigint not null auto_increment unique, order_list_id bigint, product_id bigint, quantity int not null, product_price int, foreign key(order_list_id) references order_list(id) on delete cascade, foreign key(product_id) references products(id) on update cascade on delete set null);
+select * from order_details;
+
+insert into user(name, role) values('nike','seller');
+
+insert into products(seller_id, name, price) values(1,'sneakers-gray',55000);
+alter table products add column stock int not null;
+
+start transaction;
+insert into order_list(user_id, ordered_time) values(4, '2025-10-01 15:15:01');
+insert into order_details(order_list_id, product_id, quantity, product_price) values(1,1,1, (select price from products where id=1));
+update products set stock=9 where id=1;
+commit;
+
+select * from products where id=1;
+select ol.*, p.name, od.quantity, od.product_price from order_list ol inner join order_details od on ol.id=od.order_list_id inner join products p on od.product_id=p.id;
+
+-- order by desc / 주문테이블에서 주문상세로 새로운번호 가져올떄 
+
+**추가실습
+1.판매자는 상품에 옵션종류를 자유롭게 추가한다.
+  ex.사이즈, 색상
+2.옵션종류에 따른 다양한 옵션이 존재한다.
+  ex.90, 95, 100 또는 빨강,파랑,노랑
+3.옵션의 조합에 따른 재고가 별도로 존재한다.
+  ex.면바지-90-빨강 : 30개, 면바지-95-노랑:20개 등...
+4.사용자는 해당 옵션조합의상품에 주문을 넣는다. 

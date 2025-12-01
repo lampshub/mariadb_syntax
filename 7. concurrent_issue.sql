@@ -17,7 +17,7 @@ commit;
 insert into author(email) values('fggggsddsd@naver.com');
 
 
--- repeatable read : 읽기의 일관성 보장 -> lost update문제 발생 -> 배타lock(배타적 잠금)으로 해결
+-- repeatable read : 읽기의 일관성 보장 -> lost update문제 발생 -> 배타lock(배타적 잠금)으로 해결(select for update)
 -- lost update 문제 발생하는 상황
 DELIMITER //
 create procedure concurrent_test1()
@@ -42,7 +42,7 @@ create procedure concurrent_test2()
 begin
     declare count int;
     start transaction;
-    insert into post(title, author_id) values'hello world', 1);
+    insert into post(title, author_id) values('hello world', 1);
     select post_count into count from author where id=1 for update;
     do sleep(15);
     update author set post_count=count+1 where id=1;
